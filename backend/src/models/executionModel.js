@@ -1,5 +1,5 @@
 // Chamamos a conexeção com o banco
-const pool = require('../database/connection')
+const pool = require('../config/database')
 
 // Função que vamos exportar e os dados
 exports.insertExecution = async (data) => {

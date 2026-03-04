@@ -1,9 +1,10 @@
 // Import do arquivo executionService 
 const { listExecution } = require('../services/executionService')
 const executionService = require('../services/executionService')
+const { error } = require('../validations/executionValidator')
 
 // Função assíncrona (para esperar a resposta), que está sendo exportada para outros arquivos usarem ( como a routes )
-exports.createExecution = async(req,res) => {
+exports.createExecution = async(req,res,next) => {
 
     // Try-Catch para tratamento de erro
     try {
@@ -34,13 +35,12 @@ exports.createExecution = async(req,res) => {
 
         // Como esstamos criando algo usa-se 201
         res.status(201).json(newExecution)
-    } catch (err) {
-        console.error(err)
-        return res.status(500).json({err: "Erro ao criar execução"})
+    } catch (error) {
+        next(error)
     }
 }
 
-exports.getExecutionById = async(req,res) => {
+exports.getExecutionById = async(req,res, next) => {
 
     try {
         const { id } = req.params //req.params pq o id vem da url e nao do body
@@ -54,13 +54,12 @@ exports.getExecutionById = async(req,res) => {
         // Como nao criamos nada, apenas 200
         return res.status(200).json(execution)
 
-    } catch (err) {
-        console.log(err)
-        return res.status(500).json({err: "Erro ao buscar essa execution"})
+    } catch (error) {
+        next(error)
     }
 }
 
-exports.updateExecution = async(req,res) => {
+exports.updateExecution = async(req,res, next) => {
     try {
 
         const {id} = req.params // Pegando o ID 
@@ -75,12 +74,11 @@ exports.updateExecution = async(req,res) => {
         res.status(200).json(updatedExecution)
 
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({error: "Erro ao atualizar essa execução!"})
+         next(error)
     }
 }
 
-exports.deleteExecution = async(req,res) => {
+exports.deleteExecution = async(req,res, next) => {
 
     try {
         const {id} = req.params
@@ -94,7 +92,6 @@ exports.deleteExecution = async(req,res) => {
         res.status(200).json({message: "Execução deletada com sucesso!"})    
 
     } catch (error) {
-        console.log(error)
-        res.status(500).json({error: "Erro ao deletar essa execução!"})
+        next(error)
     }
 }

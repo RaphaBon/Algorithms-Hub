@@ -26,9 +26,10 @@ function authMiddleware(req,res,next){
 
     try {
         
-        const decoded = jwt.verify(token, process.env.JWT_SECRET) // JWT verifica aquele token com a nossa senha
+        const decoded = jwt.verify(token, process.env.JWT_SECRET) // JWT verifica aquele token com a nossa senha e salva 
+                                                                  // os dados contidos dentro do token (id, nome ou email)
 
-        req.user = decoded // Com isso qualquer controller pode acessar req.user.id
+        req.user = decoded // Com isso qualquer controller que tenha a verificação do token pode acessar os dados do usuário
 
         return next()
 

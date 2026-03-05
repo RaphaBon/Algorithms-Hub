@@ -3,7 +3,6 @@ const { listExecution } = require('../services/executionService')
 const executionService = require('../services/executionService')
 const { error } = require('../validations/executionValidator')
 
-// Função assíncrona (para esperar a resposta), que está sendo exportada para outros arquivos usarem ( como a routes )
 exports.createExecution = async(req,res,next) => {
 
     // Try-Catch para tratamento de erro
@@ -11,6 +10,7 @@ exports.createExecution = async(req,res,next) => {
         
         // Pegamos todos os dados que vieram  do body
         const {algorithm, input, output, execution_time } = req.body
+        const userId = req.user.id
 
         // Chamamos a função createExecution (executa a lógica/salva no banco/retorna o resultado) lá do executionService 
         // passando esses dados e esperamos a resposta para proseguir
@@ -19,7 +19,8 @@ exports.createExecution = async(req,res,next) => {
             input,
             output,
             execution_time
-        })
+        }, userId  // Passamos o ID que vem do token via authMiddleware
+    )
 
         // Se deu certo, passamos essa nova execução com a resposta, EX:
             /** Um objeto com os dados salvos no banco.
@@ -40,12 +41,14 @@ exports.createExecution = async(req,res,next) => {
     }
 }
 
-exports.getExecutionById = async(req,res, next) => {
+exports.getExecutionByIdAndUser = async(req,res, next) => {
 
     try {
-        const { id } = req.params //req.params pq o id vem da url e nao do body
+        const { id } = req.params // req.params pq o id vem da url e nao do body
+        
+        const userId = req.user.id // pegamos o ID do usuário via token
 
-        const execution = await executionService.getExecutionById(id)
+        const execution = await executionService.getExecutionByIdAndUser(id, userId)
 
         if(!execution){
             return res.status(404).json({error: "Execução não encontrada!"})
@@ -64,8 +67,9 @@ exports.updateExecution = async(req,res, next) => {
 
         const {id} = req.params // Pegando o ID 
         const data = req.body // Pegando os dados do body
+        const userId = req.user.id // Pegando o id do usuário
 
-        const updatedExecution = await executionService.updateExecution(id, data)
+        const updatedExecution = await executionService.updateExecution(id, userId, data)
 
         if(!updatedExecution){
             return res.status(404).json({ message: "Execução não encontrada!"})
@@ -83,7 +87,9 @@ exports.deleteExecution = async(req,res, next) => {
     try {
         const {id} = req.params
 
-        const deletedExecution = await executionService.deleteExecution(id)
+        const userId = req.user.id
+
+        const deletedExecution = await executionService.deleteExecution(id, userId)
 
         if(deletedExecution === 0){
             return res.status(404).json({message: "Remoção não encontrada!"})
@@ -94,4 +100,21 @@ exports.deleteExecution = async(req,res, next) => {
     } catch (error) {
         next(error)
     }
+}
+
+exports.listMine = async(req,res,next) => { // Pega todas as executions de um usuário X
+
+    try {
+        const userId = req.user.id // pegamos o id do usuário via token
+        const executions = await executionService.listMine(userId)
+
+        if(!executions){
+             return res.json({message: "Voce não tem nenhuma execution ainda!"})
+        }
+
+        return res.json(executions) 
+    } catch (error) {
+        next(error)
+    }
+
 }

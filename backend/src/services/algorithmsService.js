@@ -2,10 +2,16 @@ const { getAlgorithmRunner } = require("../algorithms/registry") // Importa o ca
 const executionsModel = require("../models/executionModel") // Importa a tabela do execution para salvar os dados
 const { performance } = require('perf_hooks') // Ferramenta do Node que mede o tempo com mais precisão
 
+// Função para padrozinar o nome do algoritmo.
+function normalizeAlgorithmName(name){
+    return name.trim().replace(/([a-z])([A-Z])/g, '$1_$2').replace(/[\s-]+/g, '_').toLowerCase()
+}
+
 //Async pois interage com o banco pegando um objeto com algorithm, input e o id do usuário que passou
 async function runAndSaveAlgorithms({algorithm, input, userId}) {
-
-    const runner = getAlgorithmRunner(algorithm) // Busca no registry qual função corresponde ao nome enviado
+    
+    const normalizeAlgorithm = normalizeAlgorithmName(algorithm) // PAdrozina o nome do algoritmo
+    const runner = getAlgorithmRunner(normalizeAlgorithm) // Busca no registry qual função corresponde ao nome enviado
 
     if(!runner){ // Se nao teve resposta, passamos os dados do erro
         const error = new Error("Algoritmo não suportado!!")
@@ -28,7 +34,7 @@ async function runAndSaveAlgorithms({algorithm, input, userId}) {
 
     const savedExecution = await executionsModel.insertExecution({ // Função de inserir uma execution no bd passando os dados processados
                                                                    // e pegando a resposta dela para mostrar ao usuário
-        algorithm,
+        algorithm: normalizeAlgorithm,
         input: JSON.stringify(input),   //JSON.stringify para transformar o objeto JS em texto JSON
         output: JSON.stringify(output),
         execution_time: executionTime,

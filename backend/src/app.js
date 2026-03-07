@@ -9,8 +9,9 @@ const app = express()
 const pool = require('./config/database')   // Conexão com o banco
 const executionRoutes = require('./routes/executionRoutes') // Rotas
 const userRoutes = require("./routes/userRoutes")
+const algorithmsRoutes = require('./routes/algorithmsRouter')
 const { errorHandler } = require("./middlewares/errorHandler") // Middleware de erro global
-const algorithmsRouter = require("./routes/algorithmsRoutes")
+
 
 // Configura para ler arquivos .json
 app.use(express.json())
@@ -18,7 +19,7 @@ app.use(express.json())
 // Com isso, a rota final será POST http://localhost:3000/api/nomedarota
 app.use('/api/executions', executionRoutes)
 app.use('/auth', userRoutes)
-app.use('/algorithms', algorithmsRouter)
+app.use('/algorithms', algorithmsRoutes)
 
 // Conectamos com o banco
 pool.connect().then(() => {

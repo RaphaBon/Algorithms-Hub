@@ -1,13 +1,12 @@
-const binarySearch = require("./runners/binarySearch")
-const quickSort = require('./runners/quickSort')
+// Importa todos os runners dos algoritmos:
+const quickSortRunner = require('./runners/quickSort')
 
-const registry = { // Mandamos "algorithm": "quick_sort" ele roda o algoritmo quickSort
-    binary_search: binarySearch,
-    quick_sort: quickSort,
+const algorithmsRegistry = { // Objeto que funciona como catálogo
+    quick_sort: quickSortRunner // Quando o nome passado for o quick_sort, chamamos o valor (quickSortRunner)
 }
 
-function getRunner(name){
-    return registry[name]  || null
+function getAlgorithmRunner(name){  // Função que procura o runner pelo nome
+    return algorithmsRegistry[name] || null // Se existir, retorna ela, se não, passa nuull
 }
 
-module.exports = { getRunner }
+module.exports = { getAlgorithmRunner } // Exporta a função

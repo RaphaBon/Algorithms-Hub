@@ -1,15 +1,15 @@
-const executionSchema = require('../validations/executionValidator') //Pegamos a função de validação
+exports.validateExecution = (schema) => {  // Exporta uma função que recebe um schema JOI no router
 
-exports.validateExecution = (req,res,next) => {
-    const { error } = executionSchema.validate(req.body) //Chamamos a função e passamos os dados que vieram
+    return (req,res,next) => {  // Função interna que retorna o middleware, ou seja, a externa recebe o schema 
+                                // e a interna recebe o req,res,next
 
-    if(error){  //Se ela retornar erro
-        return res.status(400).json( 
-            {message: "Dados inválidos",
-             details: error.details[0].message}) //Lista de erros gerada pelo JOI
+        const { error } = schema.validate(req.body) // Valida o schema com os dados recebidos
+
+        if(error){  //Se ela retornar erro
+            return res.status(400).json( 
+                {message: "Dados inválidos",
+                details: error.details[0].message}) //Lista de erros gerada pelo JOI
+        }
+        next()
     }
-
-    next()  // Utilizamos ele,pois, se a função nao retornar erro:
-            // router.post('/', validateExecution, executionController.insertExecution)
-            //  Aqui na rota nós nao passariamos para a próxima função.
 }

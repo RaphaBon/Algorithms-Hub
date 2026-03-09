@@ -72,13 +72,13 @@ Novos algoritmos podem ser adicionados facilmente através do sistema de registr
 
 ## 1. Clonar o repositório
 
-git clone https://github.com/seu-usuario/algorithms-hub.git
+git clone https://github.com/RaphaBon/Algorithms-Hub.git
 
 ---
 
 ## 2. Entrar na pasta do projeto
 
-cd algorithms-hub
+cd Algorithms-Hub/backend
 
 ---
 

@@ -29,24 +29,6 @@ function bfsRunner(input){
 
     const { graph, start, target } = input
     
-    if(!graph || typeof graph !== 'object' || Array.isArray(graph)){
-        const error = new Error('O input do bfs deve conter um objeto válido no "gráfico".')
-        error.statusCode = 400
-        throw error
-    }
-
-    if(!start){
-        const error = new Error('O input do bfs deve conter um "início".')
-        error.statusCode = 400
-        throw error
-    }
-
-    if(!target){
-        const error = new Error('O input do bfs deve conter um "alvo".')
-        error.statusCode = 400
-        throw error
-    }
-
     // Cria a fila e passa o ponto incial da fila
     const queue = new Queue()
     queue.enqueue(start)

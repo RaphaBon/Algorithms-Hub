@@ -1,4 +1,4 @@
-const { getAlgorithmRunner } = require("../algorithms/registry") // Importa o catalogo
+const algorithmsRegistry  = require("../algorithms/registry") // Importa o catalogo
 const executionsModel = require("../models/executionModel") // Importa a tabela do execution para salvar os dados
 const { performance } = require('perf_hooks') // Ferramenta do Node que mede o tempo com mais precisão
 
@@ -7,16 +7,21 @@ function normalizeAlgorithmName(name){
     return name.trim().replace(/([a-z])([A-Z])/g, '$1_$2').replace(/[\s-]+/g, '_').toLowerCase()
 }
 
-//Async pois interage com o banco pegando um objeto com algorithm, input e o id do usuário que passou
 async function runAndSaveAlgorithms({algorithm, input, userId}) {
     
     const normalizeAlgorithm = normalizeAlgorithmName(algorithm) // PAdrozina o nome do algoritmo
-    const runner = getAlgorithmRunner(normalizeAlgorithm) // Busca no registry qual função corresponde ao nome enviado
+    const algorithmEntry = algorithmsRegistry[normalizeAlgorithm] // Busca no registry qual função corresponde ao nome enviado
 
-    if(!runner){ // Se nao teve resposta, passamos os dados do erro
+    if(!algorithmEntry){ // Se nao teve resposta, passamos os dados do erro
         const error = new Error("Algoritmo não suportado!!")
         error.statusCode = 400
         throw error 
+    }
+
+    const { validator } = algorithmEntry
+
+    if(typeof validator === "function"){
+        validator(input)
     }
 
     /** Para vermos o tempo de resposta, pegamos o tempo atual com a ferramenta do node.
@@ -27,7 +32,7 @@ async function runAndSaveAlgorithms({algorithm, input, userId}) {
      */
 
     const startTime = performance.now()
-    const output = runner(input)
+    const output = algorithmEntry.runner(input)
     const endTime = performance.now()
 
     const executionTime = endTime - startTime
@@ -47,4 +52,14 @@ async function runAndSaveAlgorithms({algorithm, input, userId}) {
     }
 }
 
-module.exports = { runAndSaveAlgorithms } // Exportamos a resposta de volta para o controller
+async function listAlgorithms(){
+    // Transforma o objeto do algoritmhsRegistry em um arry e pegamos só os elementos que queremos
+    return Object.values(algorithmsRegistry).map((algorithm) => ({
+        name: algorithm.name,
+        displayName: algorithm.displayName,
+        description: algorithm.description,
+    }))
+    
+}
+
+module.exports = { runAndSaveAlgorithms, listAlgorithms } // Exportamos a resposta de volta para o controller

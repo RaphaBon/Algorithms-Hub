@@ -4,15 +4,42 @@ const binarySearchRunner = require('./runners/binarySearch')
 const bfsRunner = require('./runners/bfs')
 const dijkstraRunner = require("./runners/dijkstra")
 
+// Importa todas as validações
+const quickSortValidator = require('./validators/quickSortValidator')
+const binarySearchValidator = require('./validators/binarySearchValidator')
+const bfsValidator = require('./validators/bfsValidator')
+const dijkstraValidator = require('./validators/dijkstraValidator')
+
+
 const algorithmsRegistry = { // Objeto que funciona como catálogo
-    quick_sort: quickSortRunner, // Quando o nome passado for o quick_sort, chamamos o valor (quickSortRunner)
-    binary_search: binarySearchRunner,
-    bfs: bfsRunner,
-    dijkstra: dijkstraRunner
+    quick_sort: {
+        name: "quick_sort",
+        displayName: "Quick Sort",
+        description: "Ordena um array de números utilizando Quick Sort",
+        validator: quickSortValidator,
+        runner: quickSortRunner
+    },
+    binary_search: {
+        name: "binary_search",
+        displayName: "Binary Search",
+        description: "Busca binária em um array ordenado",
+        validator: binarySearchValidator,
+        runner: binarySearchRunner
+    },
+    bfs: {
+        name: "bfs",
+        displayName: "Breadth-First Search",
+        description: "Busca em largura em um grafo",
+        validator: bfsValidator,
+        runner: bfsRunner
+    },
+    dijkstra: {
+        name: "dijkstra",
+        displayName: "Dijkstra",
+        description: "Menor caminho em grafo com pesos positivos",
+        validator: dijkstraValidator,
+        runner: dijkstraRunner
+    }
 }
 
-function getAlgorithmRunner(name){  // Função que procura o runner pelo nome
-    return algorithmsRegistry[name] || null // Se existir, retorna ela, se não, passa nuull
-}
-
-module.exports = { getAlgorithmRunner } // Exporta a função
+module.exports =  algorithmsRegistry

@@ -5,8 +5,12 @@ async function register(req, res, next) {
     try {
 
         const user = await userService.register(req.body) // Passamos o body para a função de register la no service
-        res.status(200).json(user)
 
+        return res.status(201).json({
+            success: true,
+            message: "Usuário registrado com sucesso",
+            data: user
+        })
     } catch (error) {
         next(error)
     }
@@ -17,7 +21,12 @@ async function login(req, res, next) {
     try {
         
         const result = await userService.login(req.body) // Passamos o body para a função de login la no service
-        res.status(200).json(result)
+        
+        return res.status(200).json({
+            success: true,
+            message: "Login realizado com sucesso",
+            data: result
+        })
 
     } catch (error) {
         next(error)

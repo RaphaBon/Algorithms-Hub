@@ -1,7 +1,5 @@
 // Import do arquivo executionService 
-const { listExecution } = require('../services/executionService')
 const executionService = require('../services/executionService')
-const { error } = require('../validations/executionValidator')
 
 exports.createExecution = async(req,res,next) => {
 
@@ -35,7 +33,11 @@ exports.createExecution = async(req,res,next) => {
          */
 
         // Como esstamos criando algo usa-se 201
-        res.status(201).json(newExecution)
+        return res.status(201).json({
+            success: true,
+            message: "Execução criada com sucesso",
+            data: newExecution
+        })
     } catch (error) {
         next(error)
     }
@@ -51,11 +53,17 @@ exports.getExecutionByIdAndUser = async(req,res, next) => {
         const execution = await executionService.getExecutionByIdAndUser(id, userId)
 
         if(!execution){
-            return res.status(404).json({error: "Execução não encontrada!"})
+            const error = new Error("Execução não encontrada")
+            error.statusCode = 404
+            return next(error)
         }
 
         // Como nao criamos nada, apenas 200
-        return res.status(200).json(execution)
+        return res.status(200).json({
+            success: true,
+            message: "Execução encontrada com sucesso",
+            data: execution
+        })
 
     } catch (error) {
         next(error)
@@ -71,11 +79,17 @@ exports.updateExecution = async(req,res, next) => {
 
         const updatedExecution = await executionService.updateExecution(id, userId, data)
 
-        if(!updatedExecution){
-            return res.status(404).json({ message: "Execução não encontrada!"})
+        if (!updatedExecution) {
+            const error = new Error("Execução não encontrada");
+            error.statusCode = 404;
+            return next(error);
         }
 
-        res.status(200).json(updatedExecution)
+        return res.status(200).json({
+            success: true,
+            message: "Execução atualizada com sucesso",
+            data: updatedExecution
+        });
 
     } catch (error) {
          next(error)
@@ -91,11 +105,17 @@ exports.deleteExecution = async(req,res, next) => {
 
         const deletedExecution = await executionService.deleteExecution(id, userId)
 
-        if(deletedExecution === 0){
-            return res.status(404).json({message: "Remoção não encontrada!"})
-        }    
-        
-        res.status(200).json({message: "Execução deletada com sucesso!"})    
+        if (deletedExecution === 0) {
+            const error = new Error("Execução não encontrada");
+            error.statusCode = 404;
+            return next(error);
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Execução deletada com sucesso",
+            data: null
+        }); 
 
     } catch (error) {
         next(error)
@@ -108,11 +128,12 @@ exports.listMine = async(req,res,next) => { // Pega todas as executions de um us
         const userId = req.user.id // pegamos o id do usuário via token
         const executions = await executionService.listMine(userId)
 
-        if(!executions){
-             return res.json({message: "Voce não tem nenhuma execution ainda!"})
-        }
-
-        return res.json(executions) 
+        return res.status(200).json({
+            success: true,
+            message: "Execuções listadas com sucesso",
+            data: executions
+        });
+        
     } catch (error) {
         next(error)
     }

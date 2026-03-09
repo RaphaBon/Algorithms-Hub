@@ -9,6 +9,9 @@ const { runAlgorithmSchema } = require('../validations/algorithmsValidator') // 
 router.use(authMiddleware)
 
 // Passa pela autenticação, valida o algoritmh passado, e cai no controller
+router.get('/', algorithmsController.listAlgorithms)
 router.post('/run', validateExecution(runAlgorithmSchema), algorithmsController.run)
+
+
 
 module.exports = router

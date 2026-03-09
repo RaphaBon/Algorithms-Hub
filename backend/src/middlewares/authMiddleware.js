@@ -7,21 +7,27 @@ function authMiddleware(req,res,next){
 
     // Se não exisitr
     if(!authHeader){
-        return res.status(401).json({message: "Token não oferecido!"})
+        const error = new Error("Token não oferecido")
+        error.statusCode = 401
+        throw error
     }
 
     // O que era ("Bearer: 12kdsadjsaijd81wndua") vira ("Bearer", "jsnajndnasndcnaudcsac")
     const parts = authHeader.split(' ')
 
     if(parts.length !== 2){ //Se não houver apenas 2 elementos após o slipt
-        return res.status(401).json({message: "Token mal formatado!"})
+        const error = new Error("Token mal formatado")
+        error.statusCode = 401
+        throw error
     }
 
     const [scheme, token] = parts // Pegamos as 2 parte do header
 
     if(scheme.toLowerCase() !== 'bearer') // Se a primeira nao for Bearer
     {
-        return res.status(401).json({message: "Token mal formatado!"})
+        const error = new Error("Token mal formatado")
+        error.statusCode = 401
+        throw error
     }
 
     try {
@@ -33,8 +39,10 @@ function authMiddleware(req,res,next){
 
         return next()
 
-    } catch (error) {
-        return res.status(401).json({message: "Token inválido ou expirado"})
+    } catch (err) {
+        const error = new Error("Token inválido ou expirado")
+        error.statusCode = 401
+        throw error
     }
 }
 

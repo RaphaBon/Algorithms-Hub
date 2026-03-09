@@ -5,7 +5,7 @@ function quickSort(arr){
     }
 
     //Define o pivo com um número aleatório do array
-    indicePivo = Math.floor(Math.random() * arr.length)
+    const indicePivo = Math.floor(Math.random() * arr.length)
     const pivo = arr[indicePivo]
 
     //Arrays para armazenarem os valores que são menores/maiores do que o pivo 
@@ -41,15 +41,5 @@ function quickSort(arr){
  */
 
 module.exports = function quickSortRunner(input){
-    // input esperado: { arr: number[]}
-    const { arr } = input
-
-    if(!Array.isArray(arr)) //Verificamos se realmente é um array, se nao for, passamos o erro pro middleware global
-    {
-        const error = new Error("O input deve conter um array!!")
-        error.statusCode = 400
-        throw error
-    }
-    
-    return { sorted: quickSort(arr)}
+    return { sorted: quickSort(input.arr)}
 }

@@ -1,30 +1,6 @@
 function dijkstraRunner(input) {
     const { graph, start, target } = input
 
-    if (!graph || typeof graph !== 'object' || Array.isArray(graph)) {
-        const error = new Error('O input do dijkstra deve conter um grafo válido.')
-        error.statusCode = 400
-        throw error
-    }
-
-    if (!start) {
-        const error = new Error('O input do dijkstra deve conter um início.')
-        error.statusCode = 400
-        throw error
-    }
-
-    if (!target) {
-        const error = new Error('O input do dijkstra deve conter um objetivo.')
-        error.statusCode = 400
-        throw error
-    }
-
-    if (!graph[start]) {
-        const error = new Error('O início informado não está no grafo.')
-        error.statusCode = 400
-        throw error
-    }
-
     const costs = {}
     const parents = {}
     const processed = []
@@ -58,12 +34,6 @@ function dijkstraRunner(input) {
 
         for (let neighbor in neighbors) {
             const edgeWeight = neighbors[neighbor]
-
-            if (typeof edgeWeight !== 'number' || edgeWeight < 0) {
-                const error = new Error('O algoritmo de dijkstra só aceita pesos positivos.')
-                error.statusCode = 400
-                throw error
-            }
 
             const newCost = cost + edgeWeight
 

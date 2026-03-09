@@ -11,7 +11,9 @@ async function register({name, email, password}){
     const userExists = await userModel.findUserByEmail(email)
 
     if(userExists){
-        throw new Error('Email já cadastrado!')
+        const error = new Error("Email já cadastrado")
+        error.statusCode = 400
+        throw new error
     }
     // Criptografa a senha
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
@@ -22,7 +24,11 @@ async function register({name, email, password}){
         password: hashedPassword
     })
     // Retorna o usuário cadastrado
-    return user
+    return res.status(201).json({
+        success: true,
+        message: "Usuário registrado com sucesso",
+        data: user
+    })
 }
 
 async function login({email, password}){
@@ -30,13 +36,17 @@ async function login({email, password}){
     const user = await userModel.findUserByEmail(email)
 
     if(!user){
-        throw new Error('Credenciais inválidas!')
+        const error = new Error("Credenciais inválidas")
+        error.statusCode = 400
+        throw new error
     }
     // Comparamos a senha atual com a senha criptgrafa no banco
     const passwordMatch = await bcrypt.compare(password, user.password)
 
     if(!passwordMatch){
-        throw new Error('Credenciais inválidas!')
+        const error = new Error("Credenciais inválidas")
+        error.statusCode = 400
+        throw new error
     }
 
     // Aqui cria o token
@@ -46,14 +56,18 @@ async function login({email, password}){
         { expiresIn: '1h'} // Este token expira em 1 hora, depois precisa do login denovo
     )  
 
-    return {    // Retornamos o usuário e o token
+    return res.status(200).json({
+    success: true,
+    message: "Login realizado com sucesso",
+    data: {
         user: {
-            id: user.id,
-            name: user.name,
-            email: user.email
+        id: user.id,
+        name: user.name,
+        email: user.email
         },
         token
     }
+    });
 }
 
 module.exports = {register,login}

@@ -1,4 +1,4 @@
-# Algorithms Hub API
+# 🚀 Algorithms Hub API
 
 API backend para execução e gerenciamento de algoritmos.
 
@@ -6,12 +6,13 @@ Este projeto permite que usuários executem algoritmos clássicos, salvem os res
 
 ---
 
-# Testando a API com Postman
+# 🧪 Testando a API com Postman
 
 Você pode testar os endpoints da API utilizando o Postman ou qualquer outro cliente HTTP.
 
+---
 
-# Tecnologias Utilizadas
+# 🛠️ Tecnologias Utilizadas
 
 - Node.js
 - Express
@@ -22,71 +23,73 @@ Você pode testar os endpoints da API utilizando o Postman ou qualquer outro cli
 
 ---
 
-# Base URL
+# 🌐 Base URL
 
 Durante desenvolvimento:
 
+
 http://localhost:3000
+
 
 ---
 
-# Autenticação
+# 🔐 Autenticação
 
-A API utiliza **JWT (JSON Web Token)** para autenticação.
+A API utiliza JWT (JSON Web Token).
 
-Após realizar login, um token será retornado.
+Após o login, um token é retornado e deve ser enviado nas rotas protegidas:
 
-Esse token deve ser enviado no header das requisições protegidas.
 
 Authorization: Bearer TOKEN
 
-Exemplo:
+
+### Exemplo
 
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
+
 ---
 
-# Estrutura de Resposta da API
+# 📦 Estrutura de Resposta da API
 
-Todas as respostas seguem o padrão:
-
-## Sucesso
-
+### ✅ Sucesso
+```json
 {
   "success": true,
   "message": "Mensagem da operação",
   "data": {}
 }
-
-## Erro
-
+❌ Erro
 {
   "success": false,
   "message": "Descrição do erro"
 }
 
----
-
-# Endpoints
-
-## Autenticação
-
-## Registrar usuário
+📚 Endpoints
+🔐 Autenticação
+🟢 Registrar usuário
 
 POST /auth/register
 
-Cria um novo usuário.
+📌 O que faz
 
-### Body
+Cria um novo usuário no sistema.
 
+📌 Quando usar
+
+Quando um usuário for acessar o sistema pela primeira vez.
+
+📥 Body
 {
   "name": "Usuario",
   "email": "usuario@email.com",
   "password": "usuario123"
 }
+▶️ Como usar
 
-### Response
+Envie uma requisição POST com os dados do usuário.
 
+✅ Response
 {
   "success": true,
   "message": "Usuário registrado com sucesso",
@@ -96,24 +99,28 @@ Cria um novo usuário.
     "email": "usuario@email.com"
   }
 }
-
----
-
-## Login
+🔑 Login
 
 POST /auth/login
 
-Autentica um usuário e retorna um token JWT.
+📌 O que faz
 
-### Body
+Autentica o usuário e retorna um token JWT.
 
+📌 Quando usar
+
+Sempre que precisar acessar rotas protegidas.
+
+📥 Body
 {
   "email": "usuario@email.com",
   "password": "usuario123"
 }
+▶️ Como usar
 
-### Response
+Envie email e senha válidos.
 
+✅ Response
 {
   "success": true,
   "message": "Login realizado com sucesso",
@@ -126,21 +133,28 @@ Autentica um usuário e retorna um token JWT.
     "token": "JWT_TOKEN"
   }
 }
-
----
-
-## Algoritmos
-
----
-
-## Listar algoritmos disponíveis
+🧠 Algoritmos
+📋 Listar algoritmos disponíveis
 
 GET /algorithms
 
+📌 O que faz
+
 Retorna todos os algoritmos registrados na aplicação.
 
-### Response
+📌 Quando usar
 
+Quando quiser saber quais algoritmos podem ser executados.
+
+🔒 Requer autenticação
+
+Sim
+
+▶️ Como usar
+
+Envie uma requisição GET com token no header.
+
+✅ Response
 {
   "success": true,
   "message": "Algoritmos listados com sucesso",
@@ -149,52 +163,41 @@ Retorna todos os algoritmos registrados na aplicação.
       "name": "quick_sort",
       "displayName": "Quick Sort",
       "description": "Ordena um array de números utilizando Quick Sort"
-    },
-    {
-      "name": "binary_search",
-      "displayName": "Binary Search",
-      "description": "Busca binária em um array ordenado"
-    },
-    {
-      "name": "bfs",
-      "displayName": "Breadth-First Search",
-      "description": "Busca em largura em um grafo"
-    },
-    {
-      "name": "dijkstra",
-      "displayName": "Dijkstra",
-      "description": "Menor caminho em grafo com pesos positivos"
     }
   ]
 }
-
----
-
-## Executar algoritmo
+⚙️ Executar algoritmo
 
 POST /algorithms/run
 
-Executa um algoritmo e salva o resultado.
+📌 O que faz
 
-Requer autenticação.
+Executa um algoritmo, mede o tempo de execução e salva o resultado no banco.
 
-### Headers
+📌 Quando usar
 
-Authorization: Bearer TOKEN
+Quando quiser rodar um algoritmo e armazenar o resultado.
 
-### Body
+🔒 Requer autenticação
 
-Exemplo com Quick Sort:
+Sim
 
+📥 Body
 {
   "algorithm": "quick_sort",
   "input": {
     "arr": [5,2,8,1]
   }
 }
+▶️ Como usar
 
-### Response
+Faça login
 
+Envie o token
+
+Informe algoritmo + input
+
+✅ Response
 {
   "success": true,
   "message": "Algoritmo executado com sucesso",
@@ -202,126 +205,113 @@ Exemplo com Quick Sort:
     "sorted": [1,2,5,8]
   }
 }
+❌ Possíveis erros
 
----
+Algoritmo inválido
 
-## Executions
+Input inválido
+
+Token ausente
+
+📝 Executions
 
 Executions representam execuções de algoritmos feitas por usuários.
 
 Cada execução pertence a um usuário.
 
----
-
-## Criar execution
+➕ Criar execution
 
 POST /executions
 
-Requer autenticação.
+📌 O que faz
 
-### Body
+Cria manualmente uma execução no banco de dados.
 
+📌 Quando usar
+
+Quando quiser salvar uma execução sem rodar via API.
+
+🔒 Requer autenticação
+
+Sim
+
+📥 Body
 {
   "algorithm": "quick_sort",
   "input": "[5,3,2]",
   "output": "[2,3,5]",
   "execution_time": 10
 }
-
-### Response
-
-{
-  "success": true,
-  "message": "Execução criada com sucesso",
-  "data": {
-    "id": 1,
-    "algorithm": "quick_sort",
-    "input": "[5,3,2]",
-    "output": "[2,3,5]",
-    "execution_time": 10,
-    "user_id": 1
-  }
-}
-
----
-
-## Buscar execution por ID
+🔍 Buscar execution por ID
 
 GET /executions/:id
 
-Requer autenticação.
+📌 O que faz
 
 Retorna uma execução específica do usuário.
 
-### Response
+📌 Quando usar
 
-{
-  "success": true,
-  "message": "Execução encontrada com sucesso",
-  "data": {
-    "id": 1,
-    "algorithm": "quick_sort",
-    "input": "[5,3,2]",
-    "output": "[2,3,5]",
-    "execution_time": 10
-  }
-}
+Para visualizar detalhes de uma execução.
 
----
+🔒 Requer autenticação
 
-## Atualizar execution
+Sim
+
+✏️ Atualizar execution
 
 PUT /executions/:id
 
-Requer autenticação.
+📌 O que faz
 
-### Body
+Atualiza dados de uma execução existente.
 
+📌 Quando usar
+
+Quando precisar corrigir ou alterar uma execução.
+
+🔒 Requer autenticação
+
+Sim
+
+📥 Body
 {
   "algorithm": "quick_sort",
   "input": "[5,4,3]"
 }
-
-### Response
-
-{
-  "success": true,
-  "message": "Execução atualizada com sucesso",
-  "data": {
-    "id": 1,
-    "algorithm": "quick_sort",
-    "input": "[5,4,3]"
-  }
-}
-
----
-
-## Deletar execution
+🗑️ Deletar execution
 
 DELETE /executions/:id
 
-Requer autenticação.
+📌 O que faz
 
-### Response
+Remove uma execução do banco.
 
-{
-  "success": true,
-  "message": "Execução deletada com sucesso",
-  "data": null
-}
+📌 Quando usar
 
----
+Quando quiser excluir uma execução.
 
-## Listar minhas executions
+🔒 Requer autenticação
+
+Sim
+
+📄 Listar minhas executions
 
 GET /executions
 
-Requer autenticação.
+📌 O que faz
 
 Retorna todas as execuções do usuário autenticado.
 
-### Response
+📌 Quando usar
 
+Para visualizar histórico de execuções.
+
+🔒 Requer autenticação
+
+Sim
+
+✅ Response
 {
   "success": true,
   "message": "Execuções listadas com sucesso",
@@ -334,13 +324,23 @@ Retorna todas as execuções do usuário autenticado.
   ]
 }
 
----
+⚠️ Erros comuns
 
-# Próximas Melhorias
+400	Dados inválidos
+401	Token inválido ou ausente
+404	Recurso não encontrado
+500	Erro interno do servidor
 
-Planejadas para versões futuras da API:
+📌 Observações finais
 
-- Migração de input e output para JSONB
-- Documentação com Swagger/OpenAPI
-- Métricas de performance dos algoritmos
-- Novos algoritmos
+Cada usuário acessa apenas suas próprias executions
+O campo input varia de acordo com o algoritmo
+Execuções são persistidas no banco
+API preparada para expansão
+
+📈 Próximas melhorias
+
+JSONB para input/output
+Swagger/OpenAPI
+Métricas de performance
+Novos algoritmos

@@ -1,11 +1,11 @@
-exports.validateExecution = (schema) => {  // Exporta uma função que recebe um schema JOI no router
+exports.validateExecution = (schema) => {  
 
-    return (req,res,next) => {  // Função interna que retorna o middleware, ou seja, a externa recebe o schema 
-                                // e a interna recebe o req,res,next
+    return (req,res,next) => {  
+                                
 
-        const { error } = schema.validate(req.body, { abortEarly: false }) // Valida o schema com os dados recebidos
+        const { error } = schema.validate(req.body, { abortEarly: false }) 
 
-        if(error){  //Se ela retornar erro, pega os detalhes do erro separdo por virgula
+        if(error){  
             const err = new Error(error.details.map((detail) => detail.message).join(", "))
             err.statusCode = 400
             return next(err)

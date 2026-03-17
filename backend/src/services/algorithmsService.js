@@ -1,18 +1,18 @@
-const algorithmsRegistry  = require("../algorithms/registry") // Importa o catalogo
-const executionsModel = require("../models/executionModel") // Importa a tabela do execution para salvar os dados
-const { performance } = require('perf_hooks') // Ferramenta do Node que mede o tempo com mais precisão
+const algorithmsRegistry  = require("../algorithms/registry") 
+const executionsModel = require("../models/executionModel") 
+const { performance } = require('perf_hooks') 
 
-// Função para padrozinar o nome do algoritmo.
+
 function normalizeAlgorithmName(name){
     return name.trim().replace(/([a-z])([A-Z])/g, '$1_$2').replace(/[\s-]+/g, '_').toLowerCase()
 }
 
 async function runAndSaveAlgorithms({algorithm, input, userId}) {
     
-    const normalizeAlgorithm = normalizeAlgorithmName(algorithm) // PAdrozina o nome do algoritmo
-    const algorithmEntry = algorithmsRegistry[normalizeAlgorithm] // Busca no registry qual função corresponde ao nome enviado
+    const normalizeAlgorithm = normalizeAlgorithmName(algorithm) 
+    const algorithmEntry = algorithmsRegistry[normalizeAlgorithm] 
 
-    if(!algorithmEntry){ // Se nao teve resposta, passamos os dados do erro
+    if(!algorithmEntry){ 
         const error = new Error("Algoritmo não suportado!!")
         error.statusCode = 400
         throw error 
@@ -24,12 +24,7 @@ async function runAndSaveAlgorithms({algorithm, input, userId}) {
         validator(input)
     }
 
-    /** Para vermos o tempo de resposta, pegamos o tempo atual com a ferramenta do node.
-     *  Chamamos a função de runner que já tem o nome do algoritmo, entao agora só passamos o input
-     *  Pegamos o tempo  após chegar a resposta
-     *  
-     *  O tempo de execução será a diferença entre o momento que enviamos o input até o momento que recemos a resposta
-     */
+    
 
     const startTime = performance.now()
     const output = algorithmEntry.runner(input)
@@ -37,23 +32,23 @@ async function runAndSaveAlgorithms({algorithm, input, userId}) {
 
     const executionTime = endTime - startTime
 
-    const savedExecution = await executionsModel.insertExecution({ // Função de inserir uma execution no bd passando os dados processados
-                                                                   // e pegando a resposta dela para mostrar ao usuário
+    const savedExecution = await executionsModel.insertExecution({ 
+                                                                   
         algorithm: normalizeAlgorithm,
-        input: JSON.stringify(input),   //JSON.stringify para transformar o objeto JS em texto JSON
+        input: JSON.stringify(input),   
         output: JSON.stringify(output),
         execution_time: executionTime,
     }, userId
 )
 
-    return {    // Retorna o que foi salvo no banco e o output ja pronto como objeto JS
+    return {    
         ...savedExecution,
         output
     }
 }
 
 async function listAlgorithms(){
-    // Transforma o objeto do algoritmhsRegistry em um arry e pegamos só os elementos que queremos
+    
     return Object.values(algorithmsRegistry).map((algorithm) => ({
         name: algorithm.name,
         displayName: algorithm.displayName,
@@ -62,4 +57,4 @@ async function listAlgorithms(){
     
 }
 
-module.exports = { runAndSaveAlgorithms, listAlgorithms } // Exportamos a resposta de volta para o controller
+module.exports = { runAndSaveAlgorithms, listAlgorithms } 

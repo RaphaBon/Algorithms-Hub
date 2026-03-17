@@ -5,9 +5,9 @@ function dijkstraRunner(input) {
     const parents = {}
     const processed = []
 
-    // Para cada nó no grafo
+    
     for (let node in graph) {
-        costs[node] = Infinity // Define o custo como infinto
+        costs[node] = Infinity 
     }
 
     costs[start] = 0 

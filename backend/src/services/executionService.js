@@ -1,9 +1,9 @@
-// Importamos o model que conversa com o bd
+
 const executionModel = require('../models/executionModel')
 
-// Função que vamos exportar. (assíncrona e passamos os dados do controller)
+
 exports.createExecution = async (data, userId) => {
-    // Espera o model inserir a execution E O ID DO USUÁRIO EM QUESTÃO e salva a resposta dele
+    
     const result = await executionModel.insertExecution(data, userId)
     return result
 }

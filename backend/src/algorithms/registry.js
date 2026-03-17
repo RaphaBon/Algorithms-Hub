@@ -1,17 +1,17 @@
-// Importa todos os runners dos algoritmos:
+
 const quickSortRunner = require('./runners/quickSort')
 const binarySearchRunner = require('./runners/binarySearch')
 const bfsRunner = require('./runners/bfs')
 const dijkstraRunner = require("./runners/dijkstra")
 
-// Importa todas as validações
+
 const quickSortValidator = require('./validators/quickSortValidator')
 const binarySearchValidator = require('./validators/binarySearchValidator')
 const bfsValidator = require('./validators/bfsValidator')
 const dijkstraValidator = require('./validators/dijkstraValidator')
 
 
-const algorithmsRegistry = { // Objeto que funciona como catálogo
+const algorithmsRegistry = { 
     quick_sort: {
         name: "quick_sort",
         displayName: "Quick Sort",

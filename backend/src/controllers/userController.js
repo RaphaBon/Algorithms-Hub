@@ -1,10 +1,10 @@
 const userService = require('../services/userService')
 
-// Função para registar o usuário
+
 async function register(req, res, next) {   
     try {
 
-        const user = await userService.register(req.body) // Passamos o body para a função de register la no service
+        const user = await userService.register(req.body) 
 
         return res.status(201).json({
             success: true,
@@ -16,11 +16,11 @@ async function register(req, res, next) {
     }
 }
 
-// Função de login 
+
 async function login(req, res, next) {
     try {
         
-        const result = await userService.login(req.body) // Passamos o body para a função de login la no service
+        const result = await userService.login(req.body) 
         
         return res.status(200).json({
             success: true,
@@ -33,5 +33,5 @@ async function login(req, res, next) {
     }
 }
 
-// Exporta tanto o register quanto o login
+
 module.exports = {register, login}

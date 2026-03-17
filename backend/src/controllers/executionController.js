@@ -1,38 +1,29 @@
-// Import do arquivo executionService 
+
 const executionService = require('../services/executionService')
 
 exports.createExecution = async(req,res,next) => {
 
-    // Try-Catch para tratamento de erro
+    
     try {
         
-        // Pegamos todos os dados que vieram  do body
+        
         const {algorithm, input, output, execution_time } = req.body
         const userId = req.user.id
 
-        // Chamamos a função createExecution (executa a lógica/salva no banco/retorna o resultado) lá do executionService 
-        // passando esses dados e esperamos a resposta para proseguir
+        
+        
         const newExecution = await executionService.createExecution({
             algorithm,
             input,
             output,
             execution_time
-        }, userId  // Passamos o ID que vem do token via authMiddleware
+        }, userId  
     )
 
-        // Se deu certo, passamos essa nova execução com a resposta, EX:
-            /** Um objeto com os dados salvos no banco.
-                {
-                "id": 1,
-                "algorithm": "Bubble Sort",
-                "input": "5,3,2",
-                "output": "2,3,5",
-                "execution_time": 10
-                }
-         * 
-         */
+        
+            
 
-        // Como esstamos criando algo usa-se 201
+        
         return res.status(201).json({
             success: true,
             message: "Execução criada com sucesso",
@@ -46,9 +37,9 @@ exports.createExecution = async(req,res,next) => {
 exports.getExecutionByIdAndUser = async(req,res, next) => {
 
     try {
-        const { id } = req.params // req.params pq o id vem da url e nao do body
+        const { id } = req.params 
         
-        const userId = req.user.id // pegamos o ID do usuário via token
+        const userId = req.user.id 
 
         const execution = await executionService.getExecutionByIdAndUser(id, userId)
 
@@ -58,7 +49,7 @@ exports.getExecutionByIdAndUser = async(req,res, next) => {
             return next(error)
         }
 
-        // Como nao criamos nada, apenas 200
+        
         return res.status(200).json({
             success: true,
             message: "Execução encontrada com sucesso",
@@ -73,9 +64,9 @@ exports.getExecutionByIdAndUser = async(req,res, next) => {
 exports.updateExecution = async(req,res, next) => {
     try {
 
-        const {id} = req.params // Pegando o ID 
-        const data = req.body // Pegando os dados do body
-        const userId = req.user.id // Pegando o id do usuário
+        const {id} = req.params 
+        const data = req.body 
+        const userId = req.user.id 
 
         const updatedExecution = await executionService.updateExecution(id, userId, data)
 
@@ -122,10 +113,10 @@ exports.deleteExecution = async(req,res, next) => {
     }
 }
 
-exports.listMine = async(req,res,next) => { // Pega todas as executions de um usuário X
+exports.listMine = async(req,res,next) => { 
 
     try {
-        const userId = req.user.id // pegamos o id do usuário via token
+        const userId = req.user.id 
         const executions = await executionService.listMine(userId)
 
         return res.status(200).json({
